@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Convert Gregorian Date</title>
+  </head>
+  <body>
+    <h2>Convert Gregorian Date to Hebrew Date:</h2>
+    <input type="date" id="gregorianDate" />
+    <button onclick="GregnToHeb(gregorianDate)">Convert Now</button>
+    <br />
+    <br />
+    <label id="showResult"></label>
+    <script>
+      document.getElementById("gregorianDate").valueAsDate = new Date(); //default date to today
+      function GregnToHeb(myDate_String) {
+        const myDate_Date = new Date(myDate_String.value);
+        if (myDate_Date == "Invalid Date") {
+          console.log("Invalid Date");
+          document.getElementById("showResult").innerHTML = "";
+          document.getElementById("showResult").style.color =
+            "rgb(252, 11, 11)";
+          document.getElementById("showResult").innerHTML =
+            "Please Insert Valid Gregorian Date.";
+        } else {
+          document.getElementById("showResult").innerHTML = "";
+          document.getElementById("showResult").style.color = "rgb(6, 2, 252)";
+          const year = myDate_Date.getFullYear();
+          const month = myDate_Date.getMonth() + 1;
+          const day = myDate_Date.getDate();
+          const apiUrl = `https://www.hebcal.com/converter?cfg=json&gy=${year}&gm=${month}&gd=${day}&g2h=1`;
+          fetch(apiUrl)
+            .then((response) => response.json())
+            .then((result) => {
+              if (result.hebrew) {
+                document.getElementById("showResult").innerHTML = "";
+                document.getElementById("showResult").style.color =
+                  "rgb(6, 2, 252)";
+                document.getElementById("showResult").innerHTML =
+                  "<strong>Result: </strong>" + result.hebrew;
+              } else {
+                console.log("API ERROR");
+                document.getElementById("showResult").innerHTML = "";
+                document.getElementById("showResult").style.color =
+                  "rgb(252, 11, 11)";
+                document.getElementById("showResult").innerHTML =
+                  "Please Insert Valid Gregorian Date.";
+              }
+            })
+            .catch((error) => {
+              console.log("API ERROR: " + error);
+            });
+        }
+      }
+    </script>
+  </body>
+</html>
